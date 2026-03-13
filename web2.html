@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Campus Lost &amp; Found</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha512-x9Q14Ja8pgSj4oEJ+d5RysX1ói+6Q2pK7Wqe3hX6xM17oXoP9eMyvN4e/j9DeLZtGhYhR1LJxmKdcX6jsldSg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-p1CmVvMVi2w5x+0CUy5fKgqI3sz6xPrdIOgMMaqMMN+maMZ38FQFq2EDEAFDblwjg9mKx8sx0y6kzg+dCMrimA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <style>
+    :root {
+      --brand: #1e3a8a;
+      --brand-2: #2563eb;
+      --card: rgba(255, 255, 255, 0.85);
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .brand-highlight {
+      color: var(--brand-2);
+    }
+
+    .glass {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    section {
+      padding: 4rem 0;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-img-top {
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .badge-status {
+      font-size: 0.8rem;
+    }
+
+    .btn-glow {
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-glow:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 26px rgba(37, 99, 235, 0.35);
+    }
+
+    .footer {
+      background: rgba(15, 23, 42, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .form-floating label {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .form-control,
+    .form-select,
+    .form-control:focus,
+    .form-select:focus {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #f8fafc;
+    }
+
+    .form-control::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    .toast-container {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    @media (max-width: 767px) {
+      section { padding: 3rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#" data-page="home" onclick="switchPage('home')">
+        <span class="brand-highlight">Campus</span> Lost &amp; Found
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNav"
+        aria-controls="mainNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="home" onclick="switchPage('home')">
+              <i class="fa-solid fa-house"></i> Home
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Report
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="#" data-page="reportLost" onclick="switchPage('reportLost')"><i class="fa-solid fa-magnifying-glass-location"></i> Lost Item</a></li>
+              <li><a class="dropdown-item" href="#" data-page="reportFound" onclick="switchPage('reportFound')"><i class="fa-solid fa-hand-holding-heart"></i> Found Item</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Browse
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="#" data-page="browseLost" onclick="switchPage('browseLost')"><i class="fa-solid fa-book-open"></i> Lost Items</a></li>
+              <li><a class="dropdown-item" href="#" data-page="browseFound" onclick="switchPage('browseFound')"><i class="fa-solid fa-binoculars"></i> Found Items</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="contact" onclick="switchPage('contact')"><i class="fa-solid fa-envelope"></i> Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="admin" onclick="switchPage('admin')"><i class="fa-solid fa-user-shield"></i> Admin</a>
+          </li>
+          <li class="nav-item ms-3">
+            <button class="btn btn-outline-light btn-sm btn-glow" onclick="clearAllData()">
+              <i class="fa-solid fa-trash"></i> Reset
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container py-5">
+    <!-- Home -->
+    <section id="home" class="page-section active">
+      <div class="text-center mb-5">
+        <div class="avatar mx-auto mb-3">
+          <i class="fa-solid fa-magnifying-glass-location"></i>
+        </div>
+        <h1 class="display-5 fw-bold">Campus Lost &amp; Found</h1>
+        <p class="lead text-muted">
+          A modern lost &amp; found system for your campus. Report, browse, and connect in seconds.
+        </p>
+      </div>
+
+      <div class="row gy-4">
+        <div class="col-lg-4">
+          <div class="glass p-4 h-100">
+            <h5><i class="fa-solid fa-circle-plus text-info me-2"></i> Report an Item</h5>
+            <p class="text-muted">Quickly report lost or found items so the campus community can see them.</p>
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary btn-glow" onclick="switchPage('reportLost')"><i class="fa-solid fa-flag"></i> Report Lost</button>
+              <button class="btn btn-outline-light btn-glow" onclick="switchPage('reportFound')"><i class="fa-solid fa-handshake-angle"></i> Report Found</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="glass p-4 h-100">
+            <h5><i class="fa-solid fa-search text-warning me-2"></i> Browse Recent</h5>
+            <p class="text-muted">Search and filter items by category, location, or keywords.</p>
+            <div class="d-grid gap-2">
+              <button class="btn btn-warning btn-glow" onclick="switchPage('browseLost')"><i class="fa-solid fa-book-open"></i> Lost Items</button>
+              <button class="btn btn-warning btn-glow" onclick="switchPage('browseFound')"><i class="fa-solid fa-binoculars"></i> Found Items</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="glass p-4 h-100">
+            <h5><i class="fa-solid fa-gears text-success me-2"></i> Admin Dashboard</h5>
+            <p class="text-muted">Manage entries, edit item details, or delete outdated posts.</p>
+            <div class="d-grid gap-2">
+              <button class="btn btn-success btn-glow" onclick="switchPage('admin')"><i class="fa-solid fa-user-shield"></i> Go to Dashboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Report Lost Item -->
+    <section id="reportLost" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h2 class="fw-bold">Report Lost Item</h2>
+          <p class="text-muted mb-0">
+            Let others know what you lost so someone can return it to you.
+          </p>
+        </div>
+        <button class="btn btn-outline-light" onclick="switchPage('home')">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </button>
+      </div>
+
+      <div class="glass p-4 shadow-sm">
+        <form id="formLost" class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="lostName" placeholder="Your name" required />
+              <label for="lostName">Your Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="lostItemName" placeholder="Item name" required />
+              <label for="lostItemName">Item Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <select class="form-select" id="lostCategory" required>
+                <option value="">Choose category</option>
+                <option>Electronics</option>
+                <option>ID Cards</option>
+                <option>Books</option>
+                <option>Bags</option>
+                <option>Accessories</option>
+                <option>Other</option>
+              </select>
+              <label for="lostCategory">Category</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <select class="form-select" id="lostLocation" required>
+                <option value="">Choose location</option>
+                <option>Library</option>
+                <option>Lab</option>
+                <option>Canteen</option>
+                <option>Classroom</option>
+                <option>Gym</option>
+                <option>Lobby</option>
+              </select>
+              <label for="lostLocation">Location</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="date" class="form-control" id="lostDate" required />
+              <label for="lostDate">Date Lost</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="tel" class="form-control" id="lostContact" placeholder="Phone number" required />
+              <label for="lostContact">Contact Number</label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-floating">
+              <textarea class="form-control" id="lostDescription" style="height: 110px" placeholder="Describe your item" required></textarea>
+              <label for="lostDescription">Description</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Photo (optional)</label>
+            <input class="form-control" type="file" accept="image/*" id="lostPhoto" />
+          </div>
+
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary btn-glow">
+              <i class="fa-solid fa-paper-plane"></i> Submit Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Report Found Item -->
+    <section id="reportFound" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h2 class="fw-bold">Report Found Item</h2>
+          <p class="text-muted mb-0">
+            Tell the campus community what you found and where you found it.
+          </p>
+        </div>
+        <button class="btn btn-outline-light" onclick="switchPage('home')">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </button>
+      </div>
+
+      <div class="glass p-4 shadow-sm">
+        <form id="formFound" class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="foundName" placeholder="Your name" required />
+              <label for="foundName">Your Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="foundItemName" placeholder="Item name" required />
+              <label for="foundItemName">Item Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <select class="form-select" id="foundCategory" required>
+                <option value="">Choose category</option>
+                <option>Electronics</option>
+                <option>ID Cards</option>
+                <option>Books</option>
+                <option>Bags</option>
+                <option>Accessories</option>
+                <option>Other</option>
+              </select>
+              <label for="foundCategory">Category</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <select class="form-select" id="foundLocation" required>
+                <option value="">Choose location</option>
+                <option>Library</option>
+                <option>Lab</option>
+                <option>Canteen</option>
+                <option>Classroom</option>
+                <option>Gym</option>
+                <option>Lobby</option>
+              </select>
+              <label for="foundLocation">Location</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="date" class="form-control" id="foundDate" required />
+              <label for="foundDate">Date Found</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="tel" class="form-control" id="foundContact" placeholder="Phone number" required />
+              <label for="foundContact">Contact Number</label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-floating">
+              <textarea class="form-control" id="foundDescription" style="height: 110px" placeholder="Describe what you found" required></textarea>
+              <label for="foundDescription">Description</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Photo (optional)</label>
+            <input class="form-control" type="file" accept="image/*" id="foundPhoto" />
+          </div>
+
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary btn-glow">
+              <i class="fa-solid fa-paper-plane"></i> Submit Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Browse Lost Items -->
+    <section id="browseLost" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+        <div>
+          <h2 class="fw-bold">Browse Lost Items</h2>
+          <p class="text-muted mb-0">Search and filter lost items. Reach out to the owner directly to help reunite belongings.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-light" onclick="switchPage('reportLost')">
+            <i class="fa-solid fa-flag"></i> Report Lost
+          </button>
+          <button class="btn btn-outline-light" onclick="switchPage('admin')">
+            <i class="fa-solid fa-user-shield"></i> Admin
+          </button>
+        </div>
+      </div>
+
+      <div class="glass p-4 shadow-sm mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="searchLost" placeholder="Search items" />
+              <label for="searchLost">Search</label>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-floating">
+              <select class="form-select" id="filterLostCategory">
+                <option value="">All Categories</option>
+                <option>Electronics</option>
+                <option>ID Cards</option>
+                <option>Books</option>
+                <option>Bags</option>
+                <option>Accessories</option>
+                <option>Other</option>
+              </select>
+              <label for="filterLostCategory">Category</label>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-floating">
+              <select class="form-select" id="filterLostLocation">
+                <option value="">All Locations</option>
+                <option>Library</option>
+                <option>Lab</option>
+                <option>Canteen</option>
+                <option>Classroom</option>
+                <option>Gym</option>
+                <option>Lobby</option>
+              </select>
+              <label for="filterLostLocation">Location</label>
+            </div>
+          </div>
+
+          <div class="col-md-2 text-end">
+            <button class="btn btn-primary btn-glow w-100" onclick="renderItems('lost')">
+              <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="lostGrid" class="row g-4"></div>
+      <div id="lostEmpty" class="text-center text-muted mt-5">
+        <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+        <p class="mb-0">No lost items reported yet. Be the first to report!</p>
+      </div>
+    </section>
+
+    <!-- Browse Found Items -->
+    <section id="browseFound" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+        <div>
+          <h2 class="fw-bold">Browse Found Items</h2>
+          <p class="text-muted mb-0">See what others have found and help return items to their owners.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-light" onclick="switchPage('reportFound')">
+            <i class="fa-solid fa-handshake-angle"></i> Report Found
+          </button>
+          <button class="btn btn-outline-light" onclick="switchPage('admin')">
+            <i class="fa-solid fa-user-shield"></i> Admin
+          </button>
+        </div>
+      </div>
+
+      <div class="glass p-4 shadow-sm mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="searchFound" placeholder="Search items" />
+              <label for="searchFound">Search</label>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-floating">
+              <select class="form-select" id="filterFoundCategory">
+                <option value="">All Categories</option>
+                <option>Electronics</option>
+                <option>ID Cards</option>
+                <option>Books</option>
+                <option>Bags</option>
+                <option>Accessories</option>
+                <option>Other</option>
+              </select>
+              <label for="filterFoundCategory">Category</label>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-floating">
+              <select class="form-select" id="filterFoundLocation">
+                <option value="">All Locations</option>
+                <option>Library</option>
+                <option>Lab</option>
+                <option>Canteen</option>
+                <option>Classroom</option>
+                <option>Gym</option>
+                <option>Lobby</option>
+              </select>
+              <label for="filterFoundLocation">Location</label>
+            </div>
+          </div>
+
+          <div class="col-md-2 text-end">
+            <button class="btn btn-primary btn-glow w-100" onclick="renderItems('found')">
+              <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="foundGrid" class="row g-4"></div>
+      <div id="foundEmpty" class="text-center text-muted mt-5">
+        <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+        <p class="mb-0">No found items reported yet. Share what you found!</p>
+      </div>
+    </section>
+
+    <!-- Contact Page -->
+    <section id="contact" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h2 class="fw-bold">Contact &amp; Support</h2>
+          <p class="text-muted mb-0">Questions? Feedback? Reach out and help us keep the system running smoothly.</p>
+        </div>
+        <button class="btn btn-outline-light" onclick="switchPage('home')">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </button>
+      </div>
+
+      <div class="row gy-4">
+        <div class="col-lg-6">
+          <div class="glass p-4 shadow-sm h-100">
+            <h5 class="fw-semibold"><i class="fa-solid fa-comments text-info me-2"></i> Need Help?</h5>
+            <p class="text-muted">Reach campus IT support for login issues, lost &amp; found questions, or content reports.</p>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fa-solid fa-envelope me-2 text-warning"></i>
+                <a class="link-light" href="mailto:support@campuslostfound.edu">support@campuslostfound.edu</a>
+              </li>
+              <li class="mb-2">
+                <i class="fa-solid fa-phone me-2 text-success"></i>
+                <a class="link-light" href="tel:+1234567890">+1 (234) 567-890</a>
+              </li>
+              <li>
+                <i class="fa-solid fa-location-dot me-2 text-info"></i>
+                Campus IT Center, Main Library Building
+              </li>
+            </ul>
+
+            <div class="mt-4">
+              <h6 class="fw-semibold">Stay in the loop</h6>
+              <p class="text-muted mb-2">Sign up for updates about system improvements and community notices.</p>
+              <form id="contactForm" class="row g-2">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <input type="email" class="form-control" id="contactEmail" placeholder="Email" required />
+                    <label for="contactEmail">Email address</label>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating">
+                    <textarea class="form-control" id="contactMessage" style="height: 90px" placeholder="Message" required></textarea>
+                    <label for="contactMessage">Message</label>
+                  </div>
+                </div>
+                <div class="col-12 text-end">
+                  <button class="btn btn-primary btn-glow" type="submit"><i class="fa-solid fa-paper-plane"></i> Send</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="glass p-4 shadow-sm h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-4 opacity-25">
+              <i class="fa-solid fa-network-wired fa-5x"></i>
+            </div>
+            <h5 class="fw-semibold"><i class="fa-solid fa-shield-halved text-success me-2"></i> Privacy &amp; Security</h5>
+            <p class="text-muted">
+              We store all reports locally in your browser (localStorage). No personal data is sent anywhere, and you can clear history at any time.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fa-solid fa-lock me-2 text-warning"></i>
+                Data stays on your device
+              </li>
+              <li class="mb-2">
+                <i class="fa-solid fa-trash-can me-2 text-danger"></i>
+                Use Reset to clear all reports
+              </li>
+              <li>
+                <i class="fa-solid fa-clock me-2 text-info"></i>
+                LocalStorage retains data until removed
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Dashboard -->
+    <section id="admin" class="page-section">
+      <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+        <div>
+          <h2 class="fw-bold">Admin Dashboard</h2>
+          <p class="text-muted mb-0">Manage all reports, edit entries, or remove outdated items.</p>
+        </div>
+        <button class="btn btn-outline-light" onclick="switchPage('home')">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </button>
+      </div>
+
+      <div class="glass p-4 shadow-sm mb-4">
+        <div class="row gy-3">
+          <div class="col-md-4">
+            <div class="form-floating">
+              <select class="form-select" id="adminFilterStatus">
+                <option value="">All Statuses</option>
+                <option value="lost">Lost</option>
+                <option value="found">Found</option>
+              </select>
+              <label for="adminFilterStatus">Status</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-floating">
+              <select class="form-select" id="adminFilterCategory">
+                <option value="">All Categories</option>
+                <option>Electronics</option>
+                <option>ID Cards</option>
+                <option>Books</option>
+                <option>Bags</option>
+                <option>Accessories</option>
+                <option>Other</option>
+              </select>
+              <label for="adminFilterCategory">Category</label>
+            </div>
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-primary btn-glow" onclick="renderItems('admin')"><i class="fa-solid fa-sync"></i> Refresh</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="adminGrid" class="row g-4"></div>
+      <div id="adminEmpty" class="text-center text-muted mt-5">
+        <i class="fa-solid fa-shield-halved fa-2x mb-2"></i>
+        <p class="mb-0">No reports found. Encourage people to share lost & found items.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Edit Modal -->
+  <div
+    class="modal fade"
+    id="editModal"
+    tabindex="-1"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content glass">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel"><i class="fa-solid fa-pencil"></i> Edit Item</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editForm" class="row g-3">
+            <input type="hidden" id="editId" />
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="editName" placeholder="Your name" required />
+                <label for="editName">Your Name</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="editItemName" placeholder="Item name" required />
+                <label for="editItemName">Item Name</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="editCategory" required>
+                  <option value="">Choose category</option>
+                  <option>Electronics</option>
+                  <option>ID Cards</option>
+                  <option>Books</option>
+                  <option>Bags</option>
+                  <option>Accessories</option>
+                  <option>Other</option>
+                </select>
+                <label for="editCategory">Category</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="editLocation" required>
+                  <option value="">Choose location</option>
+                  <option>Library</option>
+                  <option>Lab</option>
+                  <option>Canteen</option>
+                  <option>Classroom</option>
+                  <option>Gym</option>
+                  <option>Lobby</option>
+                </select>
+                <label for="editLocation">Location</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="date" class="form-control" id="editDate" required />
+                <label for="editDate">Date</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="tel" class="form-control" id="editContact" placeholder="Phone number" required />
+                <label for="editContact">Contact Number</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea class="form-control" id="editDescription" style="height: 110px" placeholder="Describe item" required></textarea>
+                <label for="editDescription">Description</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Replace Photo (optional)</label>
+              <input class="form-control" type="file" accept="image/*" id="editPhoto" />
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center">
+              <div class="form-check form-switch ms-auto">
+                <input class="form-check-input" type="checkbox" id="editStatusSwitch" />
+                <label class="form-check-label" for="editStatusSwitch">Mark as Found</label>
+              </div>
+            </div>
+
+            <div class="col-12 text-end">
+              <button type="submit" class="btn btn-success btn-glow">
+                <i class="fa-solid fa-check"></i> Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="position-fixed toast-container p-3">
+    <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastBody"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"
+    integrity="sha512-3unoe2+4cKPSynVt1pIZmZjlmkedz/xAnrVEfNPM2fwT9V7HoGQqTayOWyEAW2Oa7WWfMwr+sCzGQ9KxhyqL6A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <script>
+    // --- Utility helpers ---
+    const STORAGE_KEY = 'campus_lost_found_items';
+    const toastEl = document.getElementById('liveToast');
+    const toast = new bootstrap.Toast(toastEl, { delay: 2600 });
+
+    function showToast(message) {
+      document.getElementById('toastBody').textContent = message;
+      toast.show();
+    }
+
+    function generateId() {
+      return 'i-' + Date.now() + '-' + Math.random().toString(16).slice(2, 8);
+    }
+
+    function todayDate() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getStoredItems() {
+      const raw = localStorage.getItem(STORAGE_KEY) || '[]';
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return [];
+      }
+    }
+
+    function setStoredItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function clearAllData() {
+      if (!confirm('This will remove all saved reports from local storage. Continue?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderItems('lost');
+      renderItems('found');
+      renderItems('admin');
+      showToast('All data cleared');
+    }
+
+    function formatDate(date) {
+      if (!date) return '';
+      const d = new Date(date);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function makeStatusBadge(status) {
+      const isLost = status === 'lost';
+      const color = isLost ? 'danger' : 'success';
+      const icon = isLost ? 'fa-location-dot' : 'fa-hand-holding-heart';
+      const text = isLost ? 'Lost' : 'Found';
+      return `<span class="badge bg-${color} badge-status"><i class="fa-solid ${icon} me-1"></i>${text}</span>`;
+    }
+
+    function makeCategoryBadge(category) {
+      if (!category) return '';
+      return `<span class="badge bg-secondary me-1">${category}</span>`;
+    }
+
+    function createItemCard(item, context) {
+      const isLost = item.status === 'lost';
+      const badge = makeStatusBadge(item.status);
+      const category = makeCategoryBadge(item.category);
+      const due = formatDate(item.date);
+      const photo = item.photo || 'https://images.unsplash.com/photo-1511376777868-611b54f68947?auto=format&fit=crop&w=1200&q=70';
+      const card = document.createElement('div');
+      card.className = 'col-sm-6 col-lg-4';
+      card.innerHTML = `
+        <div class="card h-100 glass border-0 overflow-hidden shadow-sm hover-shadow">
+          <div class="position-relative">
+            <img src="${photo}" class="card-img-top" alt="${item.itemName}" />
+            <div class="position-absolute top-0 start-0 m-2">${badge}</div>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${item.itemName}</h5>
+            <p class="card-text text-muted small mb-2">
+              ${category} <span class="text-white">•</span> <span class="text-white fw-semibold">${item.location}</span>
+            </p>
+            <p class="card-text mb-2">${item.description || ''}</p>
+            <ul class="list-unstyled text-muted small mb-3">
+              <li><i class="fa-solid fa-user me-2"></i>${item.name}</li>
+              <li><i class="fa-solid fa-calendar-days me-2"></i>${due}</li>
+            </ul>
+            <div class="mt-auto">
+              <button class="btn btn-sm btn-outline-light w-100 mb-2" onclick="contactOwner('${item.id}')">
+                <i class="fa-solid fa-envelope"></i> Contact Owner
+              </button>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-primary flex-fill" onclick="openEditModal('${item.id}')">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger flex-fill" onclick="deleteItem('${item.id}')">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    function contactOwner(itemId) {
+      const item = getStoredItems().find(x => x.id === itemId);
+      if (!item) return;
+      const message = `Contact ${item.name} about "${item.itemName}"\nPhone: ${item.contact}`;
+      showToast(message);
+    }
+
+    function deleteItem(itemId) {
+      if (!confirm('Delete this report? This action cannot be undone.')) return;
+      const items = getStoredItems().filter(x => x.id !== itemId);
+      setStoredItems(items);
+      renderItems('lost');
+      renderItems('found');
+      renderItems('admin');
+      showToast('Item deleted successfully');
+    }
+
+    function openEditModal(itemId) {
+      const item = getStoredItems().find(x => x.id === itemId);
+      if (!item) return;
+      document.getElementById('editId').value = item.id;
+      document.getElementById('editName').value = item.name;
+      document.getElementById('editItemName').value = item.itemName;
+      document.getElementById('editCategory').value = item.category;
+      document.getElementById('editLocation').value = item.location;
+      document.getElementById('editDate').value = item.date;
+      document.getElementById('editContact').value = item.contact;
+      document.getElementById('editDescription').value = item.description;
+      document.getElementById('editStatusSwitch').checked = item.status === 'found';
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+      editModal.show();
+    }
+
+    // --- Page switching ---
+    function switchPage(pageId) {
+      document.querySelectorAll('.page-section').forEach((sec) => {
+        sec.classList.toggle('active', sec.id === pageId);
+      });
+
+      document.querySelectorAll('.nav-link').forEach((link) => {
+        const target = link.getAttribute('data-page');
+        if (target) link.classList.toggle('active', target === pageId);
+      });
+
+      if (pageId === 'browseLost') renderItems('lost');
+      if (pageId === 'browseFound') renderItems('found');
+      if (pageId === 'admin') renderItems('admin');
+    }
+
+    // --- Render items (lost / found / admin) ---
+    function renderItems(context) {
+      const items = getStoredItems();
+
+      const isAdmin = context === 'admin';
+      const onlyStatus = context === 'lost' || context === 'found' ? context : null;
+
+      const searchVal = (context === 'lost'
+        ? document.getElementById('searchLost').value.trim().toLowerCase()
+        : context === 'found'
+        ? document.getElementById('searchFound').value.trim().toLowerCase()
+        : ''
+      );
+
+      const categoryFilter = (
+        context === 'lost'
+          ? document.getElementById('filterLostCategory').value
+          : context === 'found'
+          ? document.getElementById('filterFoundCategory').value
+          : document.getElementById('adminFilterCategory').value
+      );
+
+      const locationFilter = (
+        context === 'lost'
+          ? document.getElementById('filterLostLocation').value
+          : context === 'found'
+          ? document.getElementById('filterFoundLocation').value
+          : ''
+      );
+
+      const statusFilter = isAdmin ? document.getElementById('adminFilterStatus').value : '';
+
+      const filtered = items.filter((item) => {
+        if (onlyStatus && item.status !== onlyStatus) return false;
+        if (statusFilter && item.status !== statusFilter) return false;
+        if (categoryFilter && item.category !== categoryFilter) return false;
+        if (locationFilter && item.location !== locationFilter) return false;
+        if (searchVal) {
+          const haystack = `${item.name} ${item.itemName} ${item.description} ${item.location} ${item.category}`.toLowerCase();
+          if (!haystack.includes(searchVal)) return false;
+        }
+        return true;
+      });
+
+      const container = context === 'lost' ? document.getElementById('lostGrid')
+        : context === 'found' ? document.getElementById('foundGrid')
+        : document.getElementById('adminGrid');
+
+      const emptyElem = context === 'lost' ? document.getElementById('lostEmpty')
+        : context === 'found' ? document.getElementById('foundEmpty')
+        : document.getElementById('adminEmpty');
+
+      container.innerHTML = '';
+      if (filtered.length === 0) {
+        emptyElem.style.display = 'block';
+        return;
+      }
+      emptyElem.style.display = 'none';
+
+      filtered.sort((a, b) => (new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt)));
+
+      filtered.forEach((item) => {
+        const card = createItemCard(item, context);
+        container.appendChild(card);
+      });
+    }
+
+    // --- Form handling ---
+    function readImageAsDataUrl(file) {
+      return new Promise((resolve) => {
+        if (!file) return resolve(null);
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleReportSubmit(form, status) {
+      const data = new FormData(form);
+      const name = data.get(`${status}Name`)?.trim();
+      const itemName = data.get(`${status}ItemName`)?.trim();
+      const category = data.get(`${status}Category`);
+      const location = data.get(`${status}Location`);
+      const date = data.get(`${status}Date`);
+      const contact = data.get(`${status}Contact`)?.trim();
+      const description = data.get(`${status}Description`)?.trim();
+      const photoFile = data.get(`${status}Photo`);
+
+      if (!name || !itemName || !category || !location || !date || !contact || !description) {
+        showToast('Please fill in all required fields.');
+        return;
+      }
+
+      const photo = await readImageAsDataUrl(photoFile);
+      const items = getStoredItems();
+      const newItem = {
+        id: generateId(),
+        status,
+        name,
+        itemName,
+        category,
+        location,
+        date,
+        contact,
+        description,
+        photo,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      items.push(newItem);
+      setStoredItems(items);
+      form.reset();
+      showToast('Report saved! It is now visible in browse pages.');
+      if (status === 'lost') switchPage('browseLost');
+      if (status === 'found') switchPage('browseFound');
+    }
+
+    function setupForms() {
+      const lostForm = document.getElementById('formLost');
+      const foundForm = document.getElementById('formFound');
+      const contactForm = document.getElementById('contactForm');
+      const editForm = document.getElementById('editForm');
+
+      lostForm.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        handleReportSubmit(lostForm, 'lost');
+      });
+
+      foundForm.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        handleReportSubmit(foundForm, 'found');
+      });
+
+      contactForm.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        const email = document.getElementById('contactEmail').value.trim();
+        const message = document.getElementById('contactMessage').value.trim();
+        if (!email || !message) {
+          showToast('Please fill in both fields.');
+          return;
+        }
+        showToast('Thanks! Your message has been submitted (demo).');
+        contactForm.reset();
+      });
+
+      editForm.addEventListener('submit', async (evt) => {
+        evt.preventDefault();
+        const id = document.getElementById('editId').value;
+        const name = document.getElementById('editName').value.trim();
+        const itemName = document.getElementById('editItemName').value.trim();
+        const category = document.getElementById('editCategory').value;
+        const location = document.getElementById('editLocation').value;
+        const date = document.getElementById('editDate').value;
+        const contact = document.getElementById('editContact').value.trim();
+        const description = document.getElementById('editDescription').value.trim();
+        const photoFile = document.getElementById('editPhoto').files[0];
+        const status = document.getElementById('editStatusSwitch').checked ? 'found' : 'lost';
+
+        const items = getStoredItems();
+        const idx = items.findIndex((item) => item.id === id);
+        if (idx === -1) return;
+
+        items[idx].name = name;
+        items[idx].itemName = itemName;
+        items[idx].category = category;
+        items[idx].location = location;
+        items[idx].date = date;
+        items[idx].contact = contact;
+        items[idx].description = description;
+        items[idx].status = status;
+        items[idx].updatedAt = new Date().toISOString();
+
+        if (photoFile) {
+          const photo = await readImageAsDataUrl(photoFile);
+          if (photo) items[idx].photo = photo;
+        }
+
+        setStoredItems(items);
+        showToast('Item updated successfully');
+        bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+        renderItems('lost');
+        renderItems('found');
+        renderItems('admin');
+      });
+    }
+
+    // --- Initialize the app ---
+    document.addEventListener('DOMContentLoaded', () => {
+      setupForms();
+      // Pre-fill date fields with today
+      document.getElementById('lostDate').value = todayDate();
+      document.getElementById('foundDate').value = todayDate();
+
+      renderItems('lost');
+      renderItems('found');
+      renderItems('admin');
+    });
+  </script>
+</body>
+</html>
